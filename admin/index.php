@@ -116,6 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <option selected><?php echo htmlspecialchars($type); ?></option>
                             <option>Satzung</option>
                             <option>Ordnung</option>
+                            <option>Richtlinie</option>
+                            <option>Statut</option>
                             <option>Sonstige</option>
                         </select>
                     </div>
