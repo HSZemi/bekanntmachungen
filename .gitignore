@@ -1,0 +1,7 @@
+.directory
+.idea
+bin/*
+data/bekanntmachungen.db
+files/*
+admin/.ht*
+*.swp
