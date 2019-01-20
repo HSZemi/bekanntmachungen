@@ -13,10 +13,21 @@ $title = '';
 $number = '';
 $year = '';
 $type = '';
+$id = '';
+$newClass = '';
+$editClass = 'd-none';
+$bgClass = 'secondary';
+$action = 'HURR DURR';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $message = handleUpload($username);
+    if (isset($_POST['edit'])) {
+        $message = handleEdit();
+        $action = 'Bearbeitung';
+    } else {
+        $message = handleUpload($username);
+        $action = 'Upload';
+    }
     if ($message === "") {
-        $message = "Upload erfolgreich.";
+        $message = "$action erfolgreich.";
         $alertclass = 'success';
     } else {
         $alertclass = 'warning';
@@ -24,7 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $number = isset($_POST['number']) ? $_POST['number'] : 'HURR DURR';
         $year = isset($_POST['year']) ? $_POST['year'] : 'HURR DURR';
         $type = isset($_POST['type']) ? $_POST['type'] : 'HURR DURR';
+        $id = isset($_POST['id']) ? $_POST['id'] : '';
     }
+
 }
 ?><!doctype html>
 <html lang="de">
@@ -75,7 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     Hallo, <?php echo $username; ?>.
 
-    <h2>Neue Bekanntmachung</h2>
+    <h2 id="formHeaderNew" class="<?php echo $newClass; ?>">Neue Bekanntmachung</h2>
+    <h2 id="formHeaderEdit" class="<?php echo $editClass; ?>">Bekanntmachung bearbeiten</h2>
 
     <?php
     if ($message !== "") {
@@ -83,8 +97,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     ?>
 
-    <div class="bg-secondary text-white p-3">
+    <div class="bg-<?php echo $bgClass; ?> text-white p-3" id="editarea">
         <form method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" id="inputId" value="<?php echo htmlspecialchars($id); ?>">
             <div class="row">
                 <div class="col-9">
                     <div class="form-group">
@@ -92,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="text" class="form-control" id="inputTitle" name="title"
                                value="<?php echo htmlspecialchars($title); ?>">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group <?php echo $newClass; ?>" id="fileFormGroup">
                         <label for="inputFile">PDF-Datei</label>
                         <input type="file" class="form-control-file" id="inputFile" name="file">
                     </div>
@@ -123,7 +138,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Bekannt machen!</button>
+            <div id="new" class="<?php echo $newClass; ?>">
+                <button type="submit" class="btn btn-primary">Bekannt machen!</button>
+            </div>
+            <div id="edit" class="<?php echo $editClass; ?>">
+                <button type="submit" name="edit" class="btn btn-primary">Modifizierte Bekanntmachung speichern!
+                </button>
+                <button type="button" class="btn btn-secondary" id="btn-cancel">Abbrechen</button>
+            </div>
         </form>
     </div>
 
@@ -141,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $lastYear = $document->year;
                         echo "<tr id='$lastYear'><th>$lastYear</th><th></th><th></th><th></th></tr>\n";
                     }
-                    echo "{$document->tablerow("..")}\n";
+                    echo "{$document->tablerow("..", true)}\n";
                 }
                 ?>
                 </tbody>
@@ -149,5 +171,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function showEdit() {
+        document.getElementById('formHeaderNew').classList.add('d-none');
+        document.getElementById('formHeaderEdit').classList.remove('d-none');
+        document.getElementById('fileFormGroup').classList.add('d-none');
+        document.getElementById('new').classList.add('d-none');
+        document.getElementById('edit').classList.remove('d-none');
+        document.getElementById('editarea').classList.remove('bg-secondary');
+        document.getElementById('editarea').classList.add('bg-info');
+    }
+
+    function showNew() {
+        document.getElementById('formHeaderNew').classList.remove('d-none');
+        document.getElementById('formHeaderEdit').classList.add('d-none');
+        document.getElementById('fileFormGroup').classList.remove('d-none');
+        document.getElementById('new').classList.remove('d-none');
+        document.getElementById('edit').classList.add('d-none');
+        document.getElementById('editarea').classList.add('bg-secondary');
+        document.getElementById('editarea').classList.remove('bg-info');
+        setFormValues("", "", "", "", "", "");
+    }
+
+    function setFormValues(title, number, year, type, file, id) {
+        document.getElementById('inputTitle').value = title;
+        document.getElementById('inputNumber').value = number;
+        document.getElementById('inputYear').value = year;
+        document.getElementById('selectType').value = type;
+        document.getElementById('inputFile').value = file;
+        document.getElementById('inputId').value = id;
+    }
+
+    function editThis(e, id) {
+        let tr = e.parentElement.parentElement;
+        let title = tr.getElementsByTagName('a')[0].textContent;
+        let number = tr.getElementsByClassName('number')[0].textContent;
+        let year = tr.getElementsByClassName('year')[0].textContent;
+        let type = tr.getElementsByClassName('type')[0].textContent;
+        setFormValues(title, number, year, type, "", id);
+        showEdit();
+        window.scrollTo(0, 0);
+    }
+
+    document.getElementById('btn-cancel').addEventListener('click', function () {
+        showNew();
+    });
+
+    if (document.getElementById('inputId').value !== '') {
+        showEdit();
+    }
+</script>
 </body>
 </html>
