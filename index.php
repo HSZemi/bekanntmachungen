@@ -34,6 +34,19 @@ include 'includes/db.php';
         </div>
     </div>
 
+    <hr>
+
+    <div class="text-center">
+        <p> Gemäß <b>§§ 36</b> und <b>37</b> der
+            <a href="https://www.sp.uni-bonn.de/dokumente/idx/Satzungen/SdS.html#%C2%A736">Satzung der
+                Studierendenschaft</a> werden offizielle Bekanntmachungen aller Gremien als AKUT Extra hier bekannt
+            gemacht.<br>
+            Sofern nicht anders geregelt, treten alle Bekanntmachungen mit ihrer Veröffentlichung an dieser Stelle
+            in Kraft. </p>
+        <p> Um ein Dokument zu veröffentlichen, sind die
+            <a href="./Formatvorgaben-AKUT-extra.pdf">Vorgaben zur Bekanntmachung</a> zu beachten.</p>
+    </div>
+
     <div class="input-group mt-5">
         <div class="input-group-prepend">
             <div class="input-group-text">Filter</div>
@@ -79,7 +92,7 @@ include 'includes/db.php';
     }
 
     document.getElementById('filterInput').addEventListener('keyup', function (e) {
-        if(e.key === "Escape"){
+        if (e.key === "Escape") {
             document.getElementById('filterInput').value = '';
         }
         applyFilter();
