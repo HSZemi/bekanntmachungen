@@ -64,6 +64,16 @@ function handleUpload($username)
         if (!$updated) {
             return "Das Dokument konnte nicht in der Datenbank gespeichert werden.";
         }
+
+        $mailrecipientsfile = dirname(__FILE__) . '/mail';
+        if (is_file($mailrecipientsfile)) {
+            $mailrecipients = file_get_contents($mailrecipientsfile);
+            mail($mailrecipients, "Neue Bekanntmachung", "Eine neue Bekanntmachung wurde hochgeladen:\r\n" .
+                "Titel: $title\r\n" .
+                "Nummer: $number / $year\r\n" .
+                "Typ: $type\r\n"
+            );
+        }
     }
     return '';
 }

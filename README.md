@@ -9,3 +9,7 @@ Online-Datenbank für in der **akut** bekannt gemachte Dokumente.
 2. Die Ordner `files` und `data` für den Webserver beschreibbar machen
 3. Den Ordner `admin` per htaccess schützen
 4. Mit einem Webbrowser `install.php` aufrufen
+
+Optional: Eine Textdatei `includes/mail` anlegen, in der eine kommaseparierte 
+Liste von E-Mail-Adressen (oder nur eine einzelne E-Mail-Adresse) steht, die 
+beim Upload einer neuen Benachrichtigung eine E-Mail erhalten sollen.
